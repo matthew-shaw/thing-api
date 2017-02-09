@@ -3,18 +3,16 @@ import json
 
 
 class ApplicationError(Exception):
-    """
 
-    This class is to be raised when the application identifies that there's been a problem
-    and that the client should be informed.
+    """This class is to be raised when the application identifies that there's been a problem and that the client
+    should be informed.
 
-    Example:
-        raise ApplicationError("Title number invalid", "E102", 400)
-
+    Example: raise ApplicationError("Title number invalid", "E102", 400)
     The handler method will then create the response body in a standard structure so clients
     will always know what to parse.
 
     """
+
     def __init__(self, message, code, http_code=500):
         Exception.__init__(self)
         self.message = message

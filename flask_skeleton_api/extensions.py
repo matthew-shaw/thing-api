@@ -10,9 +10,7 @@ logger = LogConfig()
 
 
 def register_extensions(app):
-    """
-    Adds any previously created extension objects into the app, and does any further setup they need.
-    """
+    """Adds any previously created extension objects into the app, and does any further setup they need."""
     # Logging
     logger.init_app(app)
 
@@ -29,7 +27,7 @@ def register_extensions(app):
 
 class ContextualFilter(logging.Filter):
     def filter(self, log_record):
-        """ Provide some extra variables to be placed into the log message """
+        """Provide some extra variables to be placed into the log message """
 
         # If we have an app context (because we're servicing an http request) then get the trace id we have
         # set in g (see app.py)
