@@ -5,6 +5,9 @@ Land Registry Flask APIs should be structured going forwards.
 
 See the [Application Framework](http://192.168.250.79/index.php/Application_Framework) TechDocs page for a description of the features these skeletons provide and links to some reference implementations.
 
+## Changes
+
+[Here](CHANGELOG.md) is a summary of changes, with links to changesets to aid bringing apps up to date. To further help with this, it's recommended that apps based on this skeleton keep a note in their README with the commit date and hash that they are based on.
 
 ## Usage
 
