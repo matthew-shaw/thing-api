@@ -14,6 +14,20 @@ See the [Application Framework](http://192.168.250.79/index.php/Application_Fram
 You can use this to create your own app.
 Take a copy of all the files, and change all occurences of `flask-skeleton-api` and `flask_skeleton_api` to your app name - including folders! There will be other places to tweak too such as the exposed port in docker-compose-fragment, so please look through every file before starting to extend it for your own use. There is a [more comprehensive guide](http://192.168.250.79/index.php/Diary_-_Creating_a_New_Application) available on TechDocs.
 
+### Adding database connectivity
+
+This skeleton is not configured to connect to a database by default. There are several changes/additions that should be made for it to work, listed below. Code to copy can be found in the reference implementation [gadget-api](http://192.168.249.38/gadgets/gadget-api/tree/master).
+
+* `postgres-init-fragment.sql` - Copy entire file and change it so your own database and user are defined
+* `configuration.yml` - add postgres into the commodities list
+* `Dockerfile` - Follow the link in the comment and copy the database section, changing the database name and app user accordingly to match what you've created above
+* `requirements.txt` - Copy the Flask-Migrate, Flask-SQLAlchemy and psycopg2 dependencies
+* `extensions.py` - Copy the db object creation and initialisation lines
+* `config.py` - Follow the link in the comment and copy the database section, plus the part that adds the postgres dependency into the dependencies map
+* `postgres.py` - copy entire file
+* `general.py` - uncomment postgres leg of code
+
+
 ## Available routes
 
 |Route|What it does|
