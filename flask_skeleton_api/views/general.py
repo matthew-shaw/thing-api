@@ -63,18 +63,6 @@ def cascade_health(str_depth):
                 }
                 try:
                     resp = g.requests.get(value + 'health/cascade/' + str(depth - 1))  # Try and request the health
-                    service["status_code"] = resp.status_code
-                    service["content_type"] = resp.headers["content-type"]
-                    service["content"] = resp.json()
-                    if resp.status_code == 200:  # Happy route, happy service, happy status_code.
-                        service["status"] = "OK"
-                    elif resp.status_code == 500:  # Something went wrong
-                        service["status"] = "BAD"
-                        overall_status = 500
-                    else:   # Who knows what happened.
-                        service["status"] = "UNKNOWN"
-                        overall_status = 500
-
                 except ConnectionAbortedError as e:  # More specific logging statement for abortion error
                     current_app.logger.error("Connection Aborted during health cascade on attempt to connect to {}; full error: {}".format(dependency, e))
                     service["status"] = "UNKNOWN"
@@ -89,6 +77,18 @@ def cascade_health(str_depth):
                     service["status_code"] = None
                     service["content_type"] = None
                     service["content"] = None
+                else:   # Everything worked
+                    service["status_code"] = resp.status_code
+                    service["content_type"] = resp.headers["content-type"]
+                    service["content"] = resp.json()
+                    if resp.status_code == 200:  # Happy route, happy service, happy status_code.
+                        service["status"] = "OK"
+                    elif resp.status_code == 500:  # Something went wrong
+                        service["status"] = "BAD"
+                        overall_status = 500
+                    else:   # Who knows what happened.
+                        service["status"] = "UNKNOWN"
+                        overall_status = 500
                 finally:
                     services.append(service)
     response_json = {
