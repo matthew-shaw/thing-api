@@ -79,16 +79,18 @@ def cascade_health(str_depth):
                     current_app.logger.error("Connection Aborted during health cascade on attempt to connect to {}; full error: {}".format(dependency, e))
                     service["status"] = "UNKNOWN"
                     overall_status = 500
+                    service["status_code"] = None
+                    service["content_type"] = None
+                    service["content"] = None
                 except Exception as e:  # Generic catch-all exception
                     current_app.logger.error("Unknown error occured during health cascade on request to {}; full error: {}".format(dependency, e))
                     service["status"] = "UNKNOWN"
                     overall_status = 500
+                    service["status_code"] = None
+                    service["content_type"] = None
+                    service["content"] = None
                 finally:
                     services.append(service)
-                    if service['status'] == "UNKNOWN":  # Set the null values to match Java implementation
-                        service["status_code"] = None
-                        service["content_type"] = None
-                        service["content"] = None
     response_json = {
         "cascade_depth": depth,
         "server_timestamp": str(datetime.datetime.now()),
