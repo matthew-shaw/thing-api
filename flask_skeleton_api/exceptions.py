@@ -24,12 +24,16 @@ class ApplicationError(Exception):
 
 def unhandled_exception(e):
     current_app.logger.exception('Unhandled Exception: %s', repr(e))
-    return Response(response=json.dumps({"error_message": "Unexpected error.", "error_code": "XXX"}), status=500)
+    return Response(response=json.dumps({"error_message": "Internal Server Error", "error_code": "500"}),
+                    mimetype='application/json',
+                    status=500)
 
 
 def application_error(e):
     current_app.logger.debug('Application Exception: %s', repr(e), exc_info=True)
-    return Response(response=json.dumps({"error_message": e.message, "error_code": e.code}), status=e.http_code)
+    return Response(response=json.dumps({"error_message": e.message, "error_code": e.code}),
+                    mimetype='application/json',
+                    status=e.http_code)
 
 
 def register_exception_handlers(app):
