@@ -37,13 +37,13 @@ Response: `200`
 
 ### Search titles
 
-Request: `GET /v1/titles?q=<string:query>`
+Request: `GET /v1/titles?q=<string:query>&sort=<string:sort>&filter=<string:filter>`
 
 Response: `200`
 ```json
 ```
 
-### Update whole title
+### Update a whole title
 
 Request: `PUT /v1/titles/<uuid:title_id>`
 ```json
@@ -53,7 +53,7 @@ Response: `200`
 ```json
 ```
 
-### Update part title
+### Update part of a title
 
 Request: `PATCH /v1/titles/<uuid:title_id>`
 ```json
