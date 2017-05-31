@@ -9,8 +9,13 @@ FROM hmlandregistry/dev_base_python_flask:3
 # Put your app-specific stuff here (extra yum installs etc).
 # Any unique environment variables your config.py needs should also be added as ENV entries here
 
-ENV APP_NAME title-api
+ENV APP_NAME "title-api"
 ENV MAX_HEALTH_CASCADE 6
+ENV TIMEOUT "5"
+
+# Dependencies
+ENV AUDIT_API_URL "http://audit-api:8080"
+ENV AUDIT_API_VERSION "v1"
 
 # ----
 

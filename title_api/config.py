@@ -22,9 +22,16 @@ MAX_HEALTH_CASCADE = os.environ['MAX_HEALTH_CASCADE']
 # SELF = "http://localhost:8080"
 # DEPENDENCIES = {"SELF": SELF}
 
+# Timeout
+TIMEOUT = int(os.environ['TIMEOUT'])
+
 # Using SQLAlchemy/Postgres?
 # The required variables (and required usage) can be found here:
 # http://192.168.249.38/gadgets/gadget-api/blob/master/gadget_api/config.py
+
+# Dependencies
+AUDIT_API_URL = os.environ["AUDIT_API_URL"]
+AUDIT_API_VERSION = os.environ["AUDIT_API_VERSION"]
 
 LOGCONFIG = {
     'version': 1,
