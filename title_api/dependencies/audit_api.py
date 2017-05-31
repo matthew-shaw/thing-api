@@ -9,7 +9,6 @@ import requests
 class AuditAPI(object):
     """Encapsulating class for Audit API access."""
     def __init__(self):
-        super(AuditAPI, self).__init__()
         self.base_url = current_app.config["AUDIT_API_URL"]
         self.version = current_app.config["AUDIT_API_VERSION"]
         self.timeout = current_app.config["TIMEOUT"]
