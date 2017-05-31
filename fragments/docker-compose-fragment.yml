@@ -1,17 +1,17 @@
 version: '2'
 services:
   # Notice how the service name, container name and repo directory (where the Dockerfile lives) all match.
-  flask-skeleton-api:
-    container_name: flask-skeleton-api
-    build: /vagrant/apps/flask-skeleton-api
+  title-api:
+    container_name: title-api
+    build: /vagrant/apps/title-api
     restart: on-failure
     ports:
       # The base Flask Dockerfile tells gunicorn to use 8080 by default, we expose it here and map it to a unique 
       # port for the app (which is subsequently used by the dev-env to forward it outside of vagrant too).
-      - "9998:8080"
+      - "7007:8080"
     volumes:
       # Our convention is (for python) to always map the app files to /src within the container
-      - /vagrant/apps/flask-skeleton-api:/src
+      - /vagrant/apps/title-api:/src
     # Redirect all the logs to a logstash server. Logstash is set up to parse RFC5424 format messages.
     logging:
       driver: syslog

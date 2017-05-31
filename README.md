@@ -1,4 +1,4 @@
-# flask-skeleton-api
+# title-api
 
 This repository contains a Python3-based Flask application structured in the way that all
 Land Registry Flask APIs should be structured going forwards.
@@ -12,7 +12,7 @@ See the [Application Framework](http://192.168.250.79/index.php/Application_Fram
 ## Usage
 
 You can use this to create your own app.
-Take a copy of all the files, and change all occurences of `flask-skeleton-api` and `flask_skeleton_api` to your app name - including folders! There will be other places to tweak too such as the exposed port in docker-compose-fragment, so please look through every file before starting to extend it for your own use. There is a [more comprehensive guide](http://192.168.250.79/index.php/Diary_-_Creating_a_New_Application) available on TechDocs.
+Take a copy of all the files, and change all occurences of `title-api` and `title_api` to your app name - including folders! There will be other places to tweak too such as the exposed port in docker-compose-fragment, so please look through every file before starting to extend it for your own use. There is a [more comprehensive guide](http://192.168.250.79/index.php/Diary_-_Creating_a_New_Application) available on TechDocs.
 
 ### Adding database connectivity
 
@@ -43,8 +43,8 @@ This skeleton is not configured to connect to a database by default. There are s
 This app supports the [universal dev-env](192.168.249.38/common/dev-env) so adding the following to your dev-env config file is enough:
 
 ```YAML
-  flask-skeleton-api:
-    repo: git@192.168.249.38:skeletons/flask-skeleton-api.git
+  title-api:
+    repo: git@192.168.249.38:skeletons/title-api.git
     branch: master
 ```
 
@@ -62,7 +62,7 @@ The Docker image it creates (and runs) will install all necessary requirements a
 
 ##### When not using gunicorn
 
-* FLASK_APP *(suggested value: flask_skeleton_api/main.py)*
+* FLASK_APP *(suggested value: title_api/main.py)*
 * FLASK_DEBUG *(suggested value: 1)*
 
 #### Running (when not using gunicorn)
@@ -96,7 +96,7 @@ make report="true" unittest
 
 These files get added to a test-output folder. The test-output folder is created if doesn't exist.
 
-You can run these commands in the app's running container via `docker-compose exec flask-skeleton-api <command>` or `exec flask-skeleton-api <command>`. There is also an alias: `unit-test flask-skeleton-api` and `unit-test flask-skeleton-api -r` will run tests and generate reports respectively.
+You can run these commands in the app's running container via `docker-compose exec title-api <command>` or `exec title-api <command>`. There is also an alias: `unit-test title-api` and `unit-test title-api -r` will run tests and generate reports respectively.
 
 
 ### Integration tests
@@ -110,7 +110,7 @@ make integrationtest
 
 This file gets added to the test-output folder. The test-output folder is created if doesn't exist.
 
-To run the integration tests if you are using the common dev-env you can run `docker-compose exec flask-skeleton-api make integrationtest` or, using the alias, `integration-test flask-skeleton-api`.
+To run the integration tests if you are using the common dev-env you can run `docker-compose exec title-api make integrationtest` or, using the alias, `integration-test title-api`.
 
 
 ## Application Framework implementation

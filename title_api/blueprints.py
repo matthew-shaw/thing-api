@@ -1,5 +1,5 @@
 # Import every blueprint file
-from flask_skeleton_api.views import general
+from title_api.views import general
 
 
 def register_blueprints(app):

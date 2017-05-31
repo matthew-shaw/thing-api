@@ -31,15 +31,15 @@ LOGCONFIG = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            '()': 'flask_skeleton_api.extensions.JsonFormatter'
+            '()': 'title_api.extensions.JsonFormatter'
         },
         'audit': {
-            '()': 'flask_skeleton_api.extensions.JsonAuditFormatter'
+            '()': 'title_api.extensions.JsonAuditFormatter'
         }
     },
     'filters': {
         'contextual': {
-            '()': 'flask_skeleton_api.extensions.ContextualFilter'
+            '()': 'title_api.extensions.ContextualFilter'
         }
     },
     'handlers': {
@@ -57,7 +57,7 @@ LOGCONFIG = {
         }
     },
     'loggers': {
-        'flask_skeleton_api': {
+        'title_api': {
             'handlers': ['console'],
             'level': FLASK_LOG_LEVEL
         },

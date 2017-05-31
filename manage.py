@@ -1,5 +1,5 @@
 from flask_script import Manager
-from flask_skeleton_api.main import app
+from title_api.main import app
 import os
 # Using Alembic?
 # See what extra lines are needed here:
