@@ -51,6 +51,16 @@ def update_title(title_id):
                     status=200)
 
 
+@title_v1.route("/titles/<uuid:title_id>", methods=['PATCH'])
+@consumes("application/json")
+@produces('application/json')
+def patch_title(title_id):
+    """Patch a title for a given title_id."""
+    return Response(response=json.dumps({"foo": "bar"}, separators=(',', ':')),
+                    mimetype='application/json',
+                    status=200)
+
+
 @title_v1.route("/titles/<uuid:title_id>", methods=['DELETE'])
 @produces('application/json')
 def delete_title(title_id):
