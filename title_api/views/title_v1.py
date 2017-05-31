@@ -7,7 +7,7 @@ import json
 title_v1 = Blueprint('title_v1', __name__)
 
 # JSON schema for title requests
-with open('land_title_api/swagger.json') as json_file:
+with open('title_api/swagger.json') as json_file:
     swagger = json.load(json_file)
 
 title_schema = swagger["definitions"]["TitleRequest"]
