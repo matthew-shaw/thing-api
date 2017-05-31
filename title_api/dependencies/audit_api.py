@@ -21,7 +21,7 @@ class AuditAPI(object):
             "activity_timestamp": str(datetime.now().isoformat()),
             "origin_id": current_app.config['APP_NAME'],
             "component_name": current_app.config['APP_NAME'],
-            "business_service": "Land Register Service"
+            "business_service": "Title Service"
         }
         headers = {"Content-Type": "application/json"}
         try:
