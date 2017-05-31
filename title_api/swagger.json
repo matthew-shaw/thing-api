@@ -1,0 +1,261 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Title API",
+    "description": "Provides RESTful API access to Title resources in JSON representation"
+  },
+  "host": "title-api:8080",
+  "basePath": "/v1",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/titles": {
+      "get": {
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "type": "string",
+            "description": "Search query",
+            "required": false
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "type": "integer",
+            "description": "Number of results returned per page",
+            "required": false,
+            "default": 20
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "description": "Page number",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of titles",
+            "schema": {
+              "title": "titles",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TitleResponse"
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "title",
+            "in": "body",
+            "description": "The title to be created",
+            "schema": {
+              "$ref": "#/definitions/TitleRequest"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Title has been created",
+            "schema": {
+              "$ref": "#/definitions/TitleResponse"
+            },
+            "headers": {
+              "Location": {
+                "description": "The location of the newly created title",
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "422": {
+            "$ref": "#/responses/422"
+          }
+        }
+      }
+    },
+    "/titles/{title_id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "title_id",
+            "in": "path",
+            "type": "string",
+            "description": "ID of a title",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Title has been retrieved",
+            "schema": {
+              "$ref": "#/definitions/TitleResponse"
+            }
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          }
+        }
+      },
+      "put": {
+        "parameters": [
+          {
+            "name": "title",
+            "in": "body",
+            "description": "The title to be updated",
+            "schema": {
+              "$ref": "#/definitions/TitleRequest"
+            },
+            "required": true
+          },
+          {
+            "name": "title_id",
+            "in": "path",
+            "type": "string",
+            "description": "ID of a title",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Title has been updated",
+            "schema": {
+              "$ref": "#/definitions/TitleResponse"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "422": {
+            "$ref": "#/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "title_id",
+            "in": "path",
+            "type": "string",
+            "description": "ID of a title",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Title has been deleted"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad request"
+    },
+    "404": {
+      "description": "Title not found"
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable"
+    },
+    "415": {
+      "description": "Unsupported media type"
+    },
+    "422": {
+      "description": "Validation error"
+    }
+  },
+  "definitions": {
+    "TitleRequest": {
+      "type": "object",
+      "properties": {
+        "foo": {
+          "type": "string"
+        },
+        "bar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "foo",
+        "bar"
+      ]
+    },
+    "TitleResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        },
+        "bar": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
