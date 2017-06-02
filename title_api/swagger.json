@@ -40,6 +40,17 @@
             "in": "query",
             "type": "integer",
             "description": "Page number",
+            "required": true,
+            "default": 1,
+            "format": "int32",
+            "minimum": 1
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "description": "Field to sort by",
+            "default": "-title_id",
             "required": false
           }
         ],
