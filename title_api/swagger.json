@@ -303,7 +303,7 @@
     "TitleResponse": {
       "type": "object",
       "properties": {
-        "id": {
+        "title_id": {
           "type": "string"
         },
         "foo": {
