@@ -9,65 +9,7 @@ This API is defined using [OpenAPI Specification 2.0](https://github.com/OAI/Ope
 
 ## Examples
 
-### Create title
-
-Request: `POST /v1/titles`
-```json
-```
-
-Response: `201`
-```json
-```
-
-### Get title
-
-Request: `GET /v1/titles/<uuid:title_id>`
-
-Response: `200`
-```json
-```
-
-### Get titles
-
-Request: `GET /v1/titles`
-
-Response: `200`
-```json
-```
-
-### Search titles
-
-Request: `GET /v1/titles?q=<string:query>&sort=<string:sort>&filter=<string:filter>`
-
-Response: `200`
-```json
-```
-
-### Update a whole title
-
-Request: `PUT /v1/titles/<uuid:title_id>`
-```json
-```
-
-Response: `200`
-```json
-```
-
-### Update part of a title
-
-Request: `PATCH /v1/titles/<uuid:title_id>`
-```json
-```
-
-Response: `200`
-```json
-```
-
-### Delete title
-
-Request: `DELETE /v1/titles/<uuid:title_id>`
-
-Response: `204`
+Copy the contents of [`swagger.json`](title_api/swagger.json) into the [Swagger Editor](http://editor.swagger.io/) to visualise the interface and see example requests and responses.
 
 ## Skeleton Documentation
 
