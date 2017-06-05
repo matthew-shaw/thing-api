@@ -21,7 +21,7 @@ title_schema = swagger["definitions"]["TitleRequest"]
 @title_v1.route("/titles", methods=['GET'])
 @produces('application/json')
 def get_titles():
-    """Get all Titles."""
+    """Get Titles."""
     titles = Title.query.order_by(Title.created_at).all()
     results = []
     for title in titles:
