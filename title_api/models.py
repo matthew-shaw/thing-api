@@ -1,4 +1,4 @@
-from user_api.extensions import db
+from title_api.extensions import db
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import json
