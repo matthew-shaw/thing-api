@@ -6,3 +6,4 @@ Flask-SQLAlchemy==2.2
 Flask-Migrate==2.0.4
 requests==2.13
 jsonschema==2.6.0
+psycopg2==2.7.1

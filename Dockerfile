@@ -1,9 +1,19 @@
 # Set the base image to the base image
 FROM hmlandregistry/dev_base_python_flask:3
 
-# Using SQLAlchemy/Postgres?
-# See how the required env vars are set here:
-# http://192.168.249.38/gadgets/gadget-api/blob/master/Dockerfile
+RUN yum install -y -q postgresql-devel
+
+# SQL_HOST: This must match the database created in postgres-init-fragment:
+# SQL_DATABASE: This is the root user specified in the postgres Dockerfile:
+# ALEMBIC_SQL_USERNAME: (This will be temporarily overidden to yes when the alembic database upgrade is run)
+# The following entries must match the user created in the fragments/postgres-init-fragment.sql:
+# APP_SQL_USERNAME, SQL_PASSWORD (This will be temporarily overidden to be the root password when the alembic database upgrade is run)
+ENV SQL_HOST=postgres \
+ SQL_DATABASE=title \
+ ALEMBIC_SQL_USERNAME=root \
+ SQL_USE_ALEMBIC_USER=no \
+ APP_SQL_USERNAME=titleuser \
+ SQL_PASSWORD=titlepassword
 
 # ----
 # Put your app-specific stuff here (extra yum installs etc).

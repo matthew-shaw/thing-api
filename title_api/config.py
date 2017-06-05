@@ -6,6 +6,20 @@ import os
 # app starting.
 # 3. This is the only file in the app where os.environ should be used.
 
+SQL_HOST = os.environ['SQL_HOST']
+SQL_DATABASE = os.environ['SQL_DATABASE']
+SQL_PASSWORD = os.environ['SQL_PASSWORD']
+APP_SQL_USERNAME = os.environ['APP_SQL_USERNAME']
+ALEMBIC_SQL_USERNAME = os.environ['ALEMBIC_SQL_USERNAME']
+
+if os.environ['SQL_USE_ALEMBIC_USER'] == 'yes':
+    FINAL_SQL_USERNAME = ALEMBIC_SQL_USERNAME
+else:
+    FINAL_SQL_USERNAME = APP_SQL_USERNAME
+
+SQLALCHEMY_DATABASE_URI = 'postgres://{0}:{1}@{2}/{3}'.format(FINAL_SQL_USERNAME, SQL_PASSWORD, SQL_HOST, SQL_DATABASE)
+SQLALCHEMY_TRACK_MODIFICATIONS = False  # Explicitly set this in order to remove warning on run
+
 # For logging
 FLASK_LOG_LEVEL = os.environ['LOG_LEVEL']
 
@@ -24,10 +38,6 @@ MAX_HEALTH_CASCADE = os.environ['MAX_HEALTH_CASCADE']
 
 # Timeout
 TIMEOUT = int(os.environ['TIMEOUT'])
-
-# Using SQLAlchemy/Postgres?
-# The required variables (and required usage) can be found here:
-# http://192.168.249.38/gadgets/gadget-api/blob/master/gadget_api/config.py
 
 # Dependencies
 AUDIT_API_URL = os.environ["AUDIT_API_URL"]

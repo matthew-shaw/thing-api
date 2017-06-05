@@ -1,3 +1,4 @@
+from flask_sqlalchemy import SQLAlchemy
 from flask_logconfig import LogConfig
 import logging
 import json
@@ -7,6 +8,7 @@ import collections
 
 # Create empty extension objects here
 logger = LogConfig()
+db = SQLAlchemy()
 
 
 def register_extensions(app):
@@ -18,8 +20,8 @@ def register_extensions(app):
     # just add app.audit_logger.info("an audit point").
     app.audit_logger = logging.getLogger("audit")
 
-    # Using SQLAlchemy? An example can be found at
-    # http://192.168.249.38/gadgets/gadget-api/blob/master/gadget_api/extensions.py
+    # Database
+    db.init_app(app)
 
     # All done!
     app.logger.info("Extensions registered")
