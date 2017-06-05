@@ -12,6 +12,24 @@ This API is defined using [OpenAPI Specification 2.0](https://github.com/OAI/Ope
 
 Copy the contents of [`swagger.json`](title_api/swagger.json) into the [Swagger Editor](http://editor.swagger.io/) to visualise the interface and see example requests and responses.
 
+## Database Tables
+
+### Title
+```
+Table "public.title"
+   Column    |            Type             | Modifiers 
+-------------+-----------------------------+-----------
+ title_id    | uuid                        | not null
+ foo         | character varying           | not null
+ bar         | character varying           | not null
+ created_at  | timestamp without time zone | not null
+ updated_at  | timestamp without time zone | 
+ archived_at | timestamp without time zone | 
+
+Indexes:
+"title_pkey" PRIMARY KEY, btree (title_id)
+```
+
 ## Error Codes
 * E027 - Failed to create title.
 * E028 - Failed to get title.
