@@ -1,6 +1,11 @@
-from flask import Blueprint, Response
+from flask import Blueprint, Response, request
+from title_api.extensions import db
+from title_api.models import Title
+from title_api.exceptions import ApplicationError
+from title_api.dependencies.audit_api import AuditAPI
 from flask_negotiate import consumes, produces
-from jsonschema import validate, ValidationError
+from datetime import datetime
+from jsonschema import validate, ValidationError, FormatChecker
 import json
 
 # This is the blueprint object that gets registered into the app in blueprints.py.
@@ -16,8 +21,15 @@ title_schema = swagger["definitions"]["TitleRequest"]
 @title_v1.route("/titles", methods=['GET'])
 @produces('application/json')
 def get_titles():
-    """Get all titles."""
-    return Response(response=json.dumps({"foo": "bar"}, separators=(',', ':')),
+    """Get all Titles."""
+    titles = Title.query.order_by(Title.created_at).all()
+    results = []
+    for title in titles:
+        results.append(json.loads(repr(title)))
+
+    audit = AuditAPI()
+    audit.create("Retrieved all titles")
+    return Response(response=json.dumps(results, separators=(',', ':')),
                     mimetype='application/json',
                     status=200)
 
@@ -26,17 +38,45 @@ def get_titles():
 @consumes("application/json")
 @produces('application/json')
 def create_title():
-    """Create a new title."""
-    return Response(response=json.dumps({"foo": "bar"}, separators=(',', ':')),
-                    mimetype='application/json',
-                    status=201)
+    """Create a new Title."""
+    title_request = request.json
+
+    # Validate request against schema
+    try:
+        validate(title_request, title_schema, format_checker=FormatChecker())
+    except ValidationError as e:
+        raise ApplicationError(str(e), "E001", 400)
+
+    # Create a new title
+    title = Title(foo=title_request["foo"],
+                  bar=title_request["bar"])
+
+    # Commit title to db
+    db.session.add(title)
+    db.session.commit()
+
+    # Create new title response
+    response = Response(response=repr(title),
+                        mimetype='application/json',
+                        status=201)
+
+    # For newly created resources, always set the Location header to the GET request route of the new resource.
+    response.headers["Location"] = "{0}/{1}".format(request.url, title.title_id)
+
+    audit = AuditAPI()
+    audit.create("Created new title " + title.title_id)
+    return response
 
 
 @title_v1.route("/titles/<uuid:title_id>", methods=['GET'])
 @produces('application/json')
 def get_title(title_id):
-    """Get a title for a given title_id."""
-    return Response(response=json.dumps({"foo": "bar"}, separators=(',', ':')),
+    """Get a Title for a given title_id."""
+    title = Title.query.get_or_404(str(title_id))
+
+    audit = AuditAPI()
+    audit.create("Retrieved title " + str(title_id))
+    return Response(response=repr(title),
                     mimetype='application/json',
                     status=200)
 
@@ -45,18 +85,26 @@ def get_title(title_id):
 @consumes("application/json")
 @produces('application/json')
 def update_title(title_id):
-    """Update a title for a given title_id."""
-    return Response(response=json.dumps({"foo": "bar"}, separators=(',', ':')),
-                    mimetype='application/json',
-                    status=200)
+    """Update a Title for a given title_id."""
+    title_request = request.json
 
+    try:
+        validate(title_request, title_schema, format_checker=FormatChecker())
+    except ValidationError as e:
+        raise ApplicationError(str(e), "E001", 400)
 
-@title_v1.route("/titles/<uuid:title_id>", methods=['PATCH'])
-@consumes("application/json")
-@produces('application/json')
-def patch_title(title_id):
-    """Patch a title for a given title_id."""
-    return Response(response=json.dumps({"foo": "bar"}, separators=(',', ':')),
+    title = Title.query.get_or_404(str(title_id))
+
+    title.foo = title_request["foo"]
+    title.bar = title_request["bar"]
+    title.updated_at = datetime.utcnow()
+
+    db.session.add(title)
+    db.session.commit()
+
+    audit = AuditAPI()
+    audit.create("Updated title " + str(title_id))
+    return Response(response=repr(title),
                     mimetype='application/json',
                     status=200)
 
@@ -64,7 +112,14 @@ def patch_title(title_id):
 @title_v1.route("/titles/<uuid:title_id>", methods=['DELETE'])
 @produces('application/json')
 def delete_title(title_id):
-    """Delete a title for a given title_id."""
+    """Delete a Title for a given title_id."""
+    title = Title.query.get_or_404(str(title_id))
+
+    db.session.delete(title)
+    db.session.commit()
+
+    audit = AuditAPI()
+    audit.create("Deleted title " + str(title_id))
     return Response(response=None,
                     mimetype='application/json',
                     status=204)
