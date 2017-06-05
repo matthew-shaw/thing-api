@@ -1,7 +1,7 @@
 from flask import current_app, g
 from datetime import datetime
-from land_register_api.app import app
-from land_register_api.exceptions import ApplicationError
+from title_api.app import app
+from title_api.exceptions import ApplicationError
 import json
 import requests
 
