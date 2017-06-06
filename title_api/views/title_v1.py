@@ -28,7 +28,7 @@ def get_titles():
         results.append(json.loads(repr(title)))
 
     audit = AuditAPI()
-    audit.create("Retrieved all titles")
+    audit.create("Retrieved titles")
     return Response(response=json.dumps(results, separators=(',', ':')),
                     mimetype='application/json',
                     status=200)
@@ -75,7 +75,7 @@ def get_title(title_id):
     title = Title.query.get_or_404(str(title_id))
 
     audit = AuditAPI()
-    audit.create("Retrieved title " + str(title_id))
+    audit.create("Retrieved title " + title.title_id)
     return Response(response=repr(title),
                     mimetype='application/json',
                     status=200)
@@ -103,7 +103,7 @@ def update_title(title_id):
     db.session.commit()
 
     audit = AuditAPI()
-    audit.create("Updated title " + str(title_id))
+    audit.create("Updated title " + title.title_id)
     return Response(response=repr(title),
                     mimetype='application/json',
                     status=200)
@@ -119,7 +119,7 @@ def delete_title(title_id):
     db.session.commit()
 
     audit = AuditAPI()
-    audit.create("Deleted title " + str(title_id))
+    audit.create("Deleted title " + title.title_id)
     return Response(response=None,
                     mimetype='application/json',
                     status=204)
