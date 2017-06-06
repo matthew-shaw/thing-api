@@ -9,7 +9,6 @@ class ApplicationError(Exception):
     The handler method will then create the response body in a standard structure so clients
     will always know what to parse.
     """
-
     def __init__(self, message, code, http_code=500):
         Exception.__init__(self)
         self.message = message
@@ -19,14 +18,16 @@ class ApplicationError(Exception):
 
 def unhandled_exception(e):
     current_app.logger.exception('Unhandled Exception: %s', repr(e))
-    return Response(response=json.dumps({"error_message": "Internal Server Error", "error_code": "500"}),
+    return Response(response=json.dumps({"error_message": "Internal Server Error", "error_code": "500"},
+                    separators=(',', ':')),
                     mimetype='application/json',
                     status=500)
 
 
 def application_error(e):
     current_app.logger.debug('Application Exception: %s', repr(e), exc_info=True)
-    return Response(response=json.dumps({"error_message": e.message, "error_code": e.code}),
+    return Response(response=json.dumps({"error_message": e.message, "error_code": e.code},
+                    separators=(',', ':')),
                     mimetype='application/json',
                     status=e.http_code)
 
