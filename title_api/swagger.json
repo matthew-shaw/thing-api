@@ -50,7 +50,19 @@
             "in": "query",
             "type": "string",
             "description": "Field to sort by",
-            "default": "-title_id",
+            "default": "created_at",
+            "required": false
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "Ascending or descending sort order",
+            "default": "desc",
             "required": false
           }
         ],
