@@ -25,6 +25,9 @@ class Title(db.Model):
         self.created_at = datetime.utcnow()
 
     def __repr__(self):
+        return json.dumps(self.as_dict(), separators=(',', ':'))
+
+    def as_dict(self):
         if self.updated_at:
             updated_at = self.updated_at.isoformat()
         else:
@@ -35,13 +38,11 @@ class Title(db.Model):
         else:
             archived_at = self.archived_at
 
-        return json.dumps(
-            {
-                "title_id": self.title_id,
-                "foo": self.foo,
-                "bar": self.bar,
-                "created_at": self.created_at.isoformat(),
-                "updated_at": updated_at,
-                "archived_at": archived_at
-            }, separators=(',', ':')
-        )
+        return {
+            "title_id": self.title_id,
+            "foo": self.foo,
+            "bar": self.bar,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": updated_at,
+            "archived_at": archived_at
+        }
