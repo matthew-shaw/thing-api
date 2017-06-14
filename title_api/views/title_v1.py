@@ -64,7 +64,7 @@ def create_title():
     response.headers["Location"] = "{0}/{1}".format(request.url, title.title_id)
 
     audit = AuditAPI()
-    audit.create("Created new Title: " + title.title_id)
+    audit.create("Created Title: " + title.title_id)
     return response
 
 
