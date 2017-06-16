@@ -1,7 +1,6 @@
 from title_api.main import app
 from title_api.extensions import db
 from title_api.models import Title
-import copy
 import json
 from unittest import TestCase, mock
 
@@ -36,17 +35,3 @@ class TestTitle(TestCase):
         # Check we call the correct two database methods
         self.assertTrue(mock_db_add.called)
         self.assertTrue(mock_db_commit.called)
-
-    @mock.patch.object(db.session, 'commit')
-    @mock.patch.object(db.session, 'add')
-    def test_003_incorrect_json_post(self, mock_db_add, mock_db_commit):
-        local_standard_dict = copy.deepcopy(standard_dict)
-        del local_standard_dict['foo']
-        resp = self.app.post('/v1/titles', data=json.dumps(local_standard_dict),
-                             headers={'content-type': 'application/json', 'accept': 'application/json'})
-        self.assertEqual(resp.status_code, 400)
-        assert '"error_message":"\'foo\' is a required property' in resp.get_data().decode()
-        assert '"error_code":"E001"' in resp.get_data().decode()
-        # Double check we don't call any database methods
-        self.assertFalse(mock_db_add.called)
-        self.assertFalse(mock_db_commit.called)
