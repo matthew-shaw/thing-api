@@ -3,7 +3,8 @@ from flask import current_app, g
 import datetime
 import json
 
-# This is the blueprint object that gets registered into the app in blueprints.py.
+# This is the blueprint object that gets registered into the app in
+# blueprints.py.
 general = Blueprint('general', __name__)
 
 
@@ -14,7 +15,7 @@ def check_status():
         "status": "OK",
         "headers": request.headers.to_list(),
         "commit": current_app.config["COMMIT"]
-    }), mimetype='application/json', status=200)
+    }, separators=(',', ':')), mimetype='application/json', status=200)
 
 
 @general.route("/health/cascade/<str_depth>")
@@ -29,10 +30,11 @@ def cascade_health(str_depth):
             "cascade_depth": str_depth,
             "status": "ERROR",
             "timestamp": str(datetime.datetime.now())
-        }), mimetype='application/json', status=500)
+        }, separators=(',', ':')), mimetype='application/json', status=500)
     dbs = []
     services = []
-    overall_status = 200  # if we encounter a failure at any point then this will be set to != 200
+    # if we encounter a failure at any point then this will be set to != 200
+    overall_status = 200
     if current_app.config.get("DEPENDENCIES") is not None:
         for dependency, value in current_app.config.get("DEPENDENCIES").items():
             # Below is an example of hitting a database dependency - in this instance postgresql
@@ -54,7 +56,8 @@ def cascade_health(str_depth):
             #        db["status"] = "BAD"
             #    finally:
             #        dbs.append(db)
-            # else:  # indent the following code to match the if..else block when database checks are included
+            # else:  # indent the following code to match the if..else block
+            # when database checks are included
             if depth > 0:
                 # As there is an inconsistant approach to url variables we need to check
                 # to see if we have a trailing '/' and add one if not
@@ -66,7 +69,9 @@ def cascade_health(str_depth):
                     "type": "http"
                 }
                 try:
-                    resp = g.requests.get(value + 'health/cascade/' + str(depth - 1))  # Try and request the health
+                    # Try and request the health
+                    resp = g.requests.get(
+                        value + 'health/cascade/' + str(depth - 1))
                 except ConnectionAbortedError as e:  # More specific logging statement for abortion error
                     current_app.logger.error("Connection Aborted during health cascade on attempt to connect to {};"
                                              " full error: {}".format(dependency, e))
@@ -111,4 +116,5 @@ def cascade_health(str_depth):
         response_json['status'] = "BAD"
     else:
         response_json['status'] = "OK"
-    return Response(response=json.dumps(response_json), mimetype='application/json', status=overall_status)
+    return Response(response=json.dumps(response_json, separators=(',', ':')),
+                    mimetype='application/json', status=overall_status)
