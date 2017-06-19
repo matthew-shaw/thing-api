@@ -5,11 +5,10 @@ import copy
 
 
 class TestValidation(unittest.TestCase):
-    """
-        This test case is to test that all the required fields in the are being sent to `/titles` route.
+    """This test case is to test that all the required fields in the are being sent to `/titles` route.
 
-        No need to mock anything because when the validation works a 400 request is returned and nothing
-        is written to the database.
+    No need to mock anything because when the validation works a 400 request is returned and nothing
+    is written to the database.
     """
 
     def setUp(self):
@@ -50,7 +49,8 @@ class TestValidation(unittest.TestCase):
         # data specifically shouldn't contain a foo for this test
         data.pop("foo")
 
-        response = self.app.put('/v1/titles/66d3eed7-f3db-412c-9761-4060b90b7480', headers=headers, data=json.dumps(data))
+        response = self.app.put('/v1/titles/66d3eed7-f3db-412c-9761-4060b90b7480',
+                                headers=headers, data=json.dumps(data))
 
         self.assertEqual(response.status_code, 400)
         assert("'foo' is a required property" in response.data.decode("utf-8"))
@@ -63,7 +63,8 @@ class TestValidation(unittest.TestCase):
         # data specifically shouldn't contain a bar for this test
         data.pop("bar")
 
-        response = self.app.put('/v1/titles/66d3eed7-f3db-412c-9761-4060b90b7480', headers=headers, data=json.dumps(data))
+        response = self.app.put('/v1/titles/66d3eed7-f3db-412c-9761-4060b90b7480',
+                                headers=headers, data=json.dumps(data))
 
         self.assertEqual(response.status_code, 400)
         assert("'bar' is a required property" in response.data.decode("utf-8"))
