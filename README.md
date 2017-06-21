@@ -1,8 +1,8 @@
 # Thing API
 
 ## Dependencies
-* [Audit API](http://192.168.249.38/transaction-monitoring/audit-api)
-* PostgreSQL
+* [`audit-api`](http://192.168.249.38/transaction-monitoring/audit-api)
+* `postgresql`
 
 ## Specification
 
