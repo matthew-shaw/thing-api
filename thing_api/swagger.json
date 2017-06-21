@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Title API",
-    "description": "Provides RESTful API access to Title resources in JSON representation"
+    "thing": "Thing API",
+    "description": "Provides RESTful API access to Thing resources in JSON representation"
   },
-  "host": "title-api:8080",
+  "host": "thing-api:8080",
   "basePath": "/v1",
   "schemes": [
     "http"
@@ -17,7 +17,7 @@
     "application/json"
   ],
   "paths": {
-    "/titles": {
+    "/things": {
       "get": {
         "parameters": [
           {
@@ -68,12 +68,12 @@
         ],
         "responses": {
           "200": {
-            "description": "List of titles",
+            "description": "List of things",
             "schema": {
-              "title": "titles",
+              "thing": "things",
               "type": "array",
               "items": {
-                "$ref": "#/definitions/TitleResponse"
+                "$ref": "#/definitions/ThingResponse"
               }
             }
           },
@@ -88,24 +88,24 @@
       "post": {
         "parameters": [
           {
-            "name": "title",
+            "name": "thing",
             "in": "body",
-            "description": "The title to be created",
+            "description": "The thing to be created",
             "schema": {
-              "$ref": "#/definitions/TitleRequest"
+              "$ref": "#/definitions/ThingRequest"
             },
             "required": true
           }
         ],
         "responses": {
           "201": {
-            "description": "Title has been created",
+            "description": "Thing has been created",
             "schema": {
-              "$ref": "#/definitions/TitleResponse"
+              "$ref": "#/definitions/ThingResponse"
             },
             "headers": {
               "Location": {
-                "description": "The location of the newly created title",
+                "description": "The location of the newly created thing",
                 "type": "string"
               }
             }
@@ -128,22 +128,22 @@
         }
       }
     },
-    "/titles/{title_id}": {
+    "/things/{thing_id}": {
       "get": {
         "parameters": [
           {
-            "name": "title_id",
+            "name": "thing_id",
             "in": "path",
             "type": "string",
-            "description": "ID of a title",
+            "description": "ID of a thing",
             "required": true
           }
         ],
         "responses": {
           "200": {
-            "description": "Title has been retrieved",
+            "description": "Thing has been retrieved",
             "schema": {
-              "$ref": "#/definitions/TitleResponse"
+              "$ref": "#/definitions/ThingResponse"
             }
           },
           "404": {
@@ -160,27 +160,27 @@
       "put": {
         "parameters": [
           {
-            "name": "title",
+            "name": "thing",
             "in": "body",
-            "description": "The title to be updated",
+            "description": "The thing to be updated",
             "schema": {
-              "$ref": "#/definitions/TitleRequest"
+              "$ref": "#/definitions/ThingRequest"
             },
             "required": true
           },
           {
-            "name": "title_id",
+            "name": "thing_id",
             "in": "path",
             "type": "string",
-            "description": "ID of a title",
+            "description": "ID of a thing",
             "required": true
           }
         ],
         "responses": {
           "200": {
-            "description": "Title has been updated",
+            "description": "Thing has been updated",
             "schema": {
-              "$ref": "#/definitions/TitleResponse"
+              "$ref": "#/definitions/ThingResponse"
             }
           },
           "400": {
@@ -206,27 +206,27 @@
       "patch": {
         "parameters": [
           {
-            "name": "title",
+            "name": "thing",
             "in": "body",
-            "description": "The title to be patched",
+            "description": "The thing to be patched",
             "schema": {
-              "$ref": "#/definitions/TitleRequest"
+              "$ref": "#/definitions/ThingRequest"
             },
             "required": true
           },
           {
-            "name": "title_id",
+            "name": "thing_id",
             "in": "path",
             "type": "string",
-            "description": "ID of a title",
+            "description": "ID of a thing",
             "required": true
           }
         ],
         "responses": {
           "200": {
-            "description": "Title has been patched",
+            "description": "Thing has been patched",
             "schema": {
-              "$ref": "#/definitions/TitleResponse"
+              "$ref": "#/definitions/ThingResponse"
             }
           },
           "400": {
@@ -252,16 +252,16 @@
       "delete": {
         "parameters": [
           {
-            "name": "title_id",
+            "name": "thing_id",
             "in": "path",
             "type": "string",
-            "description": "ID of a title",
+            "description": "ID of a thing",
             "required": true
           }
         ],
         "responses": {
           "204": {
-            "description": "Title has been deleted"
+            "description": "Thing has been deleted"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -281,7 +281,7 @@
       "description": "Bad request"
     },
     "404": {
-      "description": "Title not found"
+      "description": "Thing not found"
     },
     "405": {
       "description": "Method not allowed"
@@ -297,7 +297,7 @@
     }
   },
   "definitions": {
-    "TitleRequest": {
+    "ThingRequest": {
       "type": "object",
       "properties": {
         "foo": {
@@ -312,10 +312,10 @@
         "bar"
       ]
     },
-    "TitleResponse": {
+    "ThingResponse": {
       "type": "object",
       "properties": {
-        "title_id": {
+        "thing_id": {
           "type": "string"
         },
         "foo": {

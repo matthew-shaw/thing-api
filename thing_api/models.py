@@ -1,16 +1,16 @@
-from title_api.extensions import db
+from thing_api.extensions import db
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import json
 import uuid
 
 
-class Title(db.Model):
-    """Class represention of a Title."""
-    __tablename__ = 'title'
+class Thing(db.Model):
+    """Class represention of a Thing."""
+    __tablename__ = 'thing'
 
     # Fields
-    title_id = db.Column(UUID, primary_key=True)
+    thing_id = db.Column(UUID, primary_key=True)
     foo = db.Column(db.String, nullable=False)
     bar = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
@@ -19,7 +19,7 @@ class Title(db.Model):
 
     # Methods
     def __init__(self, foo, bar):
-        self.title_id = str(uuid.uuid4())
+        self.thing_id = str(uuid.uuid4())
         self.foo = foo
         self.bar = bar
         self.created_at = datetime.utcnow()
@@ -39,7 +39,7 @@ class Title(db.Model):
             archived_at = self.archived_at
 
         return {
-            "title_id": self.title_id,
+            "thing_id": self.thing_id,
             "foo": self.foo,
             "bar": self.bar,
             "created_at": self.created_at.isoformat(),

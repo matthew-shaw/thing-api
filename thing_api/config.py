@@ -48,15 +48,15 @@ LOGCONFIG = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            '()': 'title_api.extensions.JsonFormatter'
+            '()': 'thing_api.extensions.JsonFormatter'
         },
         'audit': {
-            '()': 'title_api.extensions.JsonAuditFormatter'
+            '()': 'thing_api.extensions.JsonAuditFormatter'
         }
     },
     'filters': {
         'contextual': {
-            '()': 'title_api.extensions.ContextualFilter'
+            '()': 'thing_api.extensions.ContextualFilter'
         }
     },
     'handlers': {
@@ -74,7 +74,7 @@ LOGCONFIG = {
         }
     },
     'loggers': {
-        'title_api': {
+        'thing_api': {
             'handlers': ['console'],
             'level': FLASK_LOG_LEVEL
         },

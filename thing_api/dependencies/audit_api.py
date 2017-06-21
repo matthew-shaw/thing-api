@@ -1,7 +1,7 @@
 from flask import current_app, g
 from datetime import datetime
-from title_api.app import app
-from title_api.exceptions import ApplicationError
+from thing_api.app import app
+from thing_api.exceptions import ApplicationError
 import json
 import requests
 
@@ -17,11 +17,11 @@ class AuditAPI(object):
         """Create a new audit record."""
         url = '{0}/{1}/records'.format(self.base_url, self.version)
         record = {
-            "activity": activity,
+            "activity": str(activity),
             "activity_timestamp": str(datetime.now().isoformat()),
             "origin_id": current_app.config['APP_NAME'],
             "component_name": current_app.config['APP_NAME'],
-            "business_service": "Title Service"
+            "business_service": "Thing Service"
         }
         headers = {"Content-Type": "application/json"}
         try:

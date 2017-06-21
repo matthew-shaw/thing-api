@@ -1,0 +1,139 @@
+from thing_api.main import app
+from thing_api.extensions import db
+from thing_api.models import Thing
+import json
+import copy
+from unittest import TestCase, mock
+
+db_response_list = list()
+thing = Thing(foo='testing', bar='still_testing')
+db_response_list.append(thing)
+
+standard_dict = {"foo": "badger",
+                 "bar": "mushroom"}
+
+
+class TestThing(TestCase):
+
+    def setUp(self):
+        self.app = app.test_client()
+
+    @mock.patch.object(db.Model, 'query')
+    def test_001_happy_path_things_get(self, mock_db_query):
+        mock_db_query.order_by.return_value.all.return_value = db_response_list
+        resp = self.app.get('/v1/things', headers={'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 200)
+        assert 'created_at' in resp.get_data().decode()
+        assert '"foo":"testing"' in resp.get_data().decode()
+        assert '"bar":"still_testing"' in resp.get_data().decode()
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'add')
+    def test_002_happy_path_things_post(self, mock_db_add, mock_db_commit):
+        resp = self.app.post('/v1/things', data=json.dumps(standard_dict),
+                             headers={'content-type': 'application/json', 'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 201)
+        # Check we call the correct two database methods
+        self.assertTrue(mock_db_add.called)
+        self.assertTrue(mock_db_commit.called)
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'add')
+    def test_003_things_incorrect_json_post(self, mock_db_add, mock_db_commit):
+        local_standard_dict = copy.deepcopy(standard_dict)
+        del local_standard_dict['foo']
+        resp = self.app.post('/v1/things', data=json.dumps(local_standard_dict),
+                             headers={'content-type': 'application/json', 'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 400)
+        assert '"error_message":"\'foo\' is a required property' in resp.get_data().decode()
+        assert '"error_code":"E001"' in resp.get_data().decode()
+        # Double check we don't call any database methods
+        self.assertFalse(mock_db_add.called)
+        self.assertFalse(mock_db_commit.called)
+
+    @mock.patch.object(db.Model, 'query')
+    def test_004_thing_id_happy_path(self, mock_db_query):
+        mock_db_query.filter_by.return_value.first.return_value = thing
+        resp = self.app.get('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b', headers={'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 200)
+        # created_thing_id = db_response_list[0].as_dict()['thing_id']
+        created_thing_id = thing.as_dict()['thing_id']
+        assert created_thing_id in resp.get_data().decode()
+
+    @mock.patch.object(db.Model, 'query')
+    def test_005_thing_id_not_available(self, mock_db_query):
+        mock_db_query.filter_by.return_value.first.return_value = None
+        resp = self.app.get('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b', headers={'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 404)
+        assert 'Thing not found' in resp.get_data().decode()
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'add')
+    @mock.patch.object(db.Model, 'query')
+    def test_006_thing_id_put_update(self, mock_db_query, mock_db_add, mock_db_commit):
+        mock_db_query.filter_by.return_value.first.return_value = thing
+        resp = self.app.put('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b', data=json.dumps(standard_dict),
+                            headers={'content-type': 'application/json', 'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 200)
+        created_thing_id = db_response_list[0].as_dict()['thing_id']
+        assert created_thing_id in resp.get_data().decode()
+        # Check we call the correct two database methods
+        self.assertTrue(mock_db_add.called)
+        self.assertTrue(mock_db_commit.called)
+        # check that the update data has been set
+        assert json.loads(resp.get_data().decode())['updated_at'] is not None
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'add')
+    @mock.patch.object(db.Model, 'query')
+    def test_007_thing_id_put_update_no_thing_exists(self, mock_db_query, mock_db_add, mock_db_commit):
+        mock_db_query.filter_by.return_value.first.return_value = None
+        resp = self.app.put('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b', data=json.dumps(standard_dict),
+                            headers={'content-type': 'application/json', 'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 404)
+        assert 'Thing not found' in resp.get_data().decode()
+        # Check we do not call the any database methods
+        self.assertFalse(mock_db_add.called)
+        self.assertFalse(mock_db_commit.called)
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'add')
+    @mock.patch.object(db.Model, 'query')
+    def test_008_thing_id_put_update_invalid_json(self, mock_db_query, mock_db_add, mock_db_commit):
+        local_standard_dict = copy.deepcopy(standard_dict)
+        del local_standard_dict['foo']
+        resp = self.app.put('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b', data=json.dumps(local_standard_dict),
+                            headers={'content-type': 'application/json', 'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 400)
+        assert '"error_message":"\'foo\' is a required property' in resp.get_data().decode()
+        assert '"error_code":"E001"' in resp.get_data().decode()
+        # Check we do not call the any database methods
+        self.assertFalse(mock_db_add.called)
+        self.assertFalse(mock_db_commit.called)
+        # check we haven't tried calling the postgres database
+        self.assertFalse(mock_db_query.called)
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'delete')
+    @mock.patch.object(db.Model, 'query')
+    def test_009_thing_id_delete(self, mock_db_query, mock_db_delete, mock_db_commit):
+        resp = self.app.delete('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b',
+                               headers={'accept': 'application/json'})
+        mock_db_query.filter_by.return_value.first.return_value = thing
+        # Check we call the correct two database methods
+        self.assertTrue(mock_db_delete.called)
+        self.assertTrue(mock_db_commit.called)
+        self.assertEqual(resp.status_code, 204)
+
+    @mock.patch.object(db.session, 'commit')
+    @mock.patch.object(db.session, 'delete')
+    @mock.patch.object(db.Model, 'query')
+    def test_010_thing_id_delete_thing_not_found(self, mock_db_query, mock_db_delete, mock_db_commit):
+        mock_db_query.filter_by.return_value.first.return_value = None
+        resp = self.app.delete('/v1/things/63f6b4bf-a0fb-45aa-acc9-af6a6c73307b',
+                               headers={'accept': 'application/json'})
+        # Check we do not call the any database methods
+        self.assertFalse(mock_db_delete.called)
+        self.assertFalse(mock_db_commit.called)
+        self.assertEqual(resp.status_code, 404)
+        assert 'Thing not found' in resp.get_data().decode()

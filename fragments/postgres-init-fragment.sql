@@ -1,6 +1,6 @@
 -- Creates database for use by the app
-CREATE DATABASE title;
+CREATE DATABASE thing;
 -- Creates user that the app will use under normal day to day running.
 -- It has no permissions by default; they will have to be specifically
 -- granted in the alembic files when tables are created.
-CREATE ROLE titleuser WITH LOGIN PASSWORD 'titlepassword';
+CREATE ROLE thinguser WITH LOGIN PASSWORD 'thingpassword';

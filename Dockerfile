@@ -9,17 +9,17 @@ RUN yum install -y -q postgresql-devel
 # The following entries must match the user created in the fragments/postgres-init-fragment.sql:
 # APP_SQL_USERNAME, SQL_PASSWORD (This will be temporarily overidden to be the root password when the alembic database upgrade is run)
 ENV SQL_HOST=postgres \
- SQL_DATABASE=title \
+ SQL_DATABASE=thing \
  ALEMBIC_SQL_USERNAME=root \
  SQL_USE_ALEMBIC_USER=no \
- APP_SQL_USERNAME=titleuser \
- SQL_PASSWORD=titlepassword
+ APP_SQL_USERNAME=thinguser \
+ SQL_PASSWORD=thingpassword
 
 # ----
 # Put your app-specific stuff here (extra yum installs etc).
 # Any unique environment variables your config.py needs should also be added as ENV entries here
 
-ENV APP_NAME "title-api"
+ENV APP_NAME "thing-api"
 ENV MAX_HEALTH_CASCADE 6
 ENV TIMEOUT "5"
 

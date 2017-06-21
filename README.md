@@ -1,4 +1,4 @@
-# Title API
+# Thing API
 
 ## Dependencies
 * [Audit API](http://192.168.249.38/transaction-monitoring/audit-api)
@@ -6,20 +6,20 @@
 
 ## Specification
 
-This API is defined using [OpenAPI Specification 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) compliant [`swagger.json`](title_api/swagger.json) code.
+This API is defined using [OpenAPI Specification 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) compliant [`swagger.json`](thing_api/swagger.json) code.
 
 ## Examples
 
-Copy the contents of [`swagger.json`](title_api/swagger.json) into the [Swagger Editor](http://editor.swagger.io/) to visualise the interface and see example requests and responses.
+Copy the contents of [`swagger.json`](thing_api/swagger.json) into the [Swagger Editor](http://editor.swagger.io/) to visualise the interface and see example requests and responses.
 
 ## Database Tables
 
-### Title
+### Thing
 ```
-Table "public.title"
+Table "public.thing"
    Column    |            Type             | Modifiers 
 -------------+-----------------------------+-----------
- title_id    | uuid                        | not null
+ thing_id    | uuid                        | not null
  foo         | character varying           | not null
  bar         | character varying           | not null
  created_at  | timestamp without time zone | not null
@@ -27,16 +27,16 @@ Table "public.title"
  archived_at | timestamp without time zone | 
 
 Indexes:
-"title_pkey" PRIMARY KEY, btree (title_id)
+"thing_pkey" PRIMARY KEY, btree (thing_id)
 ```
 
 ## Error Codes
-* E027 - Failed to create title.
-* E028 - Failed to get title.
-* E029 - Failed to search for titles.
-* E030 - Failed to update a whole title.
-* E031 - Failed to update part of a title.
-* E032 - Failed to delete title.
+* E027 - Failed to create thing.
+* E028 - Thing not found.
+* E029 - Failed to search for things.
+* E030 - Failed to update a whole thing.
+* E031 - Failed to update part of a thing.
+* E032 - Failed to delete thing.
 
 ## Skeleton Documentation
 

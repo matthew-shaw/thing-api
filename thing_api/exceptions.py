@@ -5,7 +5,7 @@ import json
 class ApplicationError(Exception):
     """This class is raised when the application identifies there's been a problem and the client should be informed.
 
-    Example: raise ApplicationError("Title number invalid", "E102", 400)
+    Example: raise ApplicationError("Thing number invalid", "E102", 400)
     The handler method will then create the response body in a standard structure so clients
     will always know what to parse.
     """

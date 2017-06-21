@@ -1,9 +1,9 @@
 from flask_script import Manager
-from title_api.main import app
+from thing_api.main import app
 import os
 from flask_migrate import Migrate, MigrateCommand
-from title_api.models import *    # noqa
-from title_api.extensions import db
+from thing_api.models import *    # noqa
+from thing_api.extensions import db
 
 migrate = Migrate(app, db)
 

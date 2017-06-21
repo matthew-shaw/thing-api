@@ -1,9 +1,9 @@
 # This file is the entry point.
 # First we import the app object, which will get initialised as we do it. Then import methods we're about to use.
-from title_api.app import app
-from title_api.extensions import register_extensions
-from title_api.blueprints import register_blueprints
-from title_api.exceptions import register_exception_handlers
+from thing_api.app import app
+from thing_api.extensions import register_extensions
+from thing_api.blueprints import register_blueprints
+from thing_api.exceptions import register_exception_handlers
 
 # Now we register any extensions we use into the app
 register_extensions(app)

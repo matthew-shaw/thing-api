@@ -1,4 +1,4 @@
-from title_api.main import app
+from thing_api.main import app
 import unittest
 
 
