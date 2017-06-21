@@ -22,7 +22,7 @@ thing_schema = swagger["definitions"]["ThingRequest"]
 @produces('application/json')
 def get_things():
     """Get Things."""
-    things = Thing.query.order_by(Thing.created_at).all()
+    things = Thing.query.order_by(Thing.created_at).paginate().items
     results = []
     for thing in things:
         results.append(json.loads(repr(thing)))
