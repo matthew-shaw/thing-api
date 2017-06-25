@@ -25,7 +25,7 @@ def get_things():
     things = Thing.query.order_by(Thing.created_at).paginate().items
     results = []
     for thing in things:
-        results.append(json.loads(repr(thing)))
+        results.append(thing.as_dict())
 
     audit = AuditAPI()
     audit.create("Retrieved Things")
