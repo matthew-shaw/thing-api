@@ -20,7 +20,7 @@ class TestThing(TestCase):
 
     @mock.patch.object(db.Model, 'query')
     def test_001_happy_path_things_get(self, mock_db_query):
-        mock_db_query.order_by.return_value.all.return_value = db_response_list
+        mock_db_query.order_by.return_value.paginate.return_value.items = db_response_list
         resp = self.app.get('/v1/things', headers={'accept': 'application/json'})
         self.assertEqual(resp.status_code, 200)
         assert 'created_at' in resp.get_data().decode()
