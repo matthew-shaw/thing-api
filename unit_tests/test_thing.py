@@ -6,7 +6,7 @@ import copy
 from unittest import TestCase, mock
 
 thing_list = []
-thing = Thing(foo='testing', bar='still_testing')
+thing = Thing(foo='badger', bar='mushroom')
 thing_list.append(thing)
 
 standard_dict = {"foo": "badger",
@@ -19,12 +19,12 @@ class TestThing(TestCase):
         self.app = app.test_client()
 
     @mock.patch.object(db.Model, 'query')
-    def test_001_happy_path_things_get(self, mock_db_query):
+    def test_001_happy_path_things_get_single_page(self, mock_db_query):
         mock_db_query.order_by.return_value.paginate.return_value.items = thing_list
         mock_db_query.order_by.return_value.paginate.return_value.has_prev = False
         mock_db_query.order_by.return_value.paginate.return_value.prev_num = None
-        mock_db_query.order_by.return_value.paginate.return_value.has_next = True
-        mock_db_query.order_by.return_value.paginate.return_value.next_num = 2
+        mock_db_query.order_by.return_value.paginate.return_value.has_next = False
+        mock_db_query.order_by.return_value.paginate.return_value.next_num = None
         mock_db_query.order_by.return_value.paginate.return_value.pages = 1
         mock_db_query.order_by.return_value.paginate.return_value.total = 1
         mock_db_query.order_by.return_value.paginate.return_value.per_page = 3
@@ -32,8 +32,10 @@ class TestThing(TestCase):
         resp = self.app.get('/v1/things?per_page=3&page=1', headers={'accept': 'application/json'})
         self.assertEqual(resp.status_code, 200)
         assert 'created_at' in resp.get_data().decode()
-        assert '"foo":"testing"' in resp.get_data().decode()
-        assert '"bar":"still_testing"' in resp.get_data().decode()
+        assert '"next":null' in resp.get_data().decode()
+        assert '"prev":null' in resp.get_data().decode()
+        assert '"foo":"badger"' in resp.get_data().decode()
+        assert '"bar":"mushroom"' in resp.get_data().decode()
 
     @mock.patch.object(db.session, 'commit')
     @mock.patch.object(db.session, 'add')
