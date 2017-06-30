@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, request
+from flask import Blueprint, Response, request, url_for
 from thing_api.extensions import db
 from thing_api.models import Thing
 from thing_api.exceptions import ApplicationError
@@ -22,14 +22,53 @@ thing_schema = swagger["definitions"]["ThingRequest"]
 @produces('application/json')
 def get_things():
     """Get Things."""
-    things = Thing.query.order_by(Thing.created_at).paginate().items
-    results = []
-    for thing in things:
-        results.append(thing.as_dict())
+    results = Thing.query.order_by(Thing.created_at).paginate()
+    things = []
+    for thing in results.items:
+        things.append(thing.as_dict())
+
+    first = request.args.to_dict()
+    first["page"] = 1
+
+    if results.has_prev:
+        prev_args = request.args.to_dict()
+        prev_args["page"] = results.prev_num
+        prev_url = url_for(request.endpoint, _external=True, **prev_args)
+    else:
+        prev_url = None
+
+    if results.has_next:
+        next_args = request.args.to_dict()
+        next_args["page"] = results.next_num
+        next_url = url_for(request.endpoint, _external=True, **next_args)
+    else:
+        next_url = None
+
+    last = request.args.to_dict()
+    last["page"] = results.pages
+
+    links = {
+        "first": url_for(request.endpoint, _external=True, **first),
+        "prev": prev_url,
+        "next": next_url,
+        "last": url_for(request.endpoint, _external=True, **last)
+    }
+
+    items = {
+        "total": results.total,
+        "from": (results.page * results.per_page) - results.per_page + 1,
+        "to": (results.page * results.per_page) - results.per_page + len(things)
+    }
+
+    response = {
+        "links": links,
+        "items": items,
+        "things": things
+    }
 
     audit = AuditAPI()
     audit.create("Retrieved Things")
-    return Response(response=json.dumps(results, separators=(',', ':')),
+    return Response(response=json.dumps(response, separators=(',', ':')),
                     mimetype='application/json',
                     status=200)
 
