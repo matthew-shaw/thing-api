@@ -54,7 +54,7 @@ def get_things():
         "last": url_for(request.endpoint, _external=True, **last)
     }
 
-    items = {
+    counts = {
         "total": results.total,
         "from": (results.page * results.per_page) - results.per_page + 1,
         "to": (results.page * results.per_page) - results.per_page + len(things)
@@ -62,7 +62,7 @@ def get_things():
 
     response = {
         "links": links,
-        "items": items,
+        "counts": counts,
         "things": things
     }
 
