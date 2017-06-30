@@ -5,9 +5,14 @@ import json
 import copy
 from unittest import TestCase, mock
 
-thing_list = []
+single_thing_list = []
 thing = Thing(foo='badger', bar='mushroom')
-thing_list.append(thing)
+single_thing_list.append(thing)
+
+multi_thing_list = []
+for idx in range(1,3):
+    thing = Thing(foo='badger', bar='mushroom')
+    multi_thing_list.append(thing)
 
 standard_dict = {"foo": "badger",
                  "bar": "mushroom"}
@@ -20,7 +25,7 @@ class TestThing(TestCase):
 
     @mock.patch.object(db.Model, 'query')
     def test_001_happy_path_things_get_single_page(self, mock_db_query):
-        mock_db_query.order_by.return_value.paginate.return_value.items = thing_list
+        mock_db_query.order_by.return_value.paginate.return_value.items = single_thing_list
         mock_db_query.order_by.return_value.paginate.return_value.has_prev = False
         mock_db_query.order_by.return_value.paginate.return_value.prev_num = None
         mock_db_query.order_by.return_value.paginate.return_value.has_next = False
@@ -36,6 +41,18 @@ class TestThing(TestCase):
         assert '"prev":null' in resp.get_data().decode()
         assert '"foo":"badger"' in resp.get_data().decode()
         assert '"bar":"mushroom"' in resp.get_data().decode()
+
+    @mock.patch.object(db.Model, 'query')
+    def test_001a_happy_path_things_get_first_page(self, mock_db_query):
+        pass
+
+    @mock.patch.object(db.Model, 'query')
+    def test_001b_happy_path_things_get_second_page(self, mock_db_query):
+        pass
+    
+    @mock.patch.object(db.Model, 'query')
+    def test_001c_happy_path_things_get_last_page(self, mock_db_query):
+        pass
 
     @mock.patch.object(db.session, 'commit')
     @mock.patch.object(db.session, 'add')
