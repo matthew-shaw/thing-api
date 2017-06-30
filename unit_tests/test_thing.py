@@ -51,7 +51,6 @@ class TestThing(TestCase):
         self.assertEqual(data["counts"]["from"], 1)
         self.assertEqual(data["counts"]["to"], 1)
         self.assertEqual(data["counts"]["total"], 1)
-        self.assertEqual(data["counts"]["total"], len(single_thing_list))
         self.assertLessEqual(data["counts"]["to"], data["counts"]["total"])
 
     @mock.patch.object(db.Model, 'query')
