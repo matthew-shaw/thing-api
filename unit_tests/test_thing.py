@@ -10,7 +10,7 @@ thing = Thing(foo='badger', bar='mushroom')
 single_thing_list.append(thing)
 
 multi_thing_list = []
-for idx in range(1,3):
+for idx in range(0, 3):
     thing = Thing(foo='badger', bar='mushroom')
     multi_thing_list.append(thing)
 
@@ -32,27 +32,117 @@ class TestThing(TestCase):
         mock_db_query.order_by.return_value.paginate.return_value.next_num = None
         mock_db_query.order_by.return_value.paginate.return_value.pages = 1
         mock_db_query.order_by.return_value.paginate.return_value.total = 1
+        mock_db_query.order_by.return_value.paginate.return_value.per_page = 1
+        mock_db_query.order_by.return_value.paginate.return_value.page = 1
+        resp = self.app.get('/v1/things?per_page=1&page=1', headers={'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.get_data().decode())
+        # Thing Objects:
+        assert 'created_at' in resp.get_data().decode()
+        assert '"foo":"badger"' in resp.get_data().decode()
+        assert '"bar":"mushroom"' in resp.get_data().decode()
+        # Links Object:
+        self.assertEqual(data["links"]["next"], None)
+        self.assertEqual(data["links"]["prev"], None)
+        assert 'page=1' in data["links"]["first"]
+        assert 'page=1' in data["links"]["last"]
+        self.assertEqual(data["links"]["first"], data["links"]["last"])
+        # Counts Object:
+        self.assertEqual(data["counts"]["from"], 1)
+        self.assertEqual(data["counts"]["to"], 1)
+        self.assertEqual(data["counts"]["total"], 1)
+        self.assertEqual(data["counts"]["total"], len(single_thing_list))
+        self.assertLessEqual(data["counts"]["to"], data["counts"]["total"])
+
+    @mock.patch.object(db.Model, 'query')
+    def test_001a_happy_path_things_get_first_page(self, mock_db_query):
+        mock_db_query.order_by.return_value.paginate.return_value.items = multi_thing_list
+        mock_db_query.order_by.return_value.paginate.return_value.has_prev = False
+        mock_db_query.order_by.return_value.paginate.return_value.prev_num = None
+        mock_db_query.order_by.return_value.paginate.return_value.has_next = True
+        mock_db_query.order_by.return_value.paginate.return_value.next_num = 2
+        mock_db_query.order_by.return_value.paginate.return_value.pages = 3
+        mock_db_query.order_by.return_value.paginate.return_value.total = 8
         mock_db_query.order_by.return_value.paginate.return_value.per_page = 3
         mock_db_query.order_by.return_value.paginate.return_value.page = 1
         resp = self.app.get('/v1/things?per_page=3&page=1', headers={'accept': 'application/json'})
         self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.get_data().decode())
+        # Thing Objects:
         assert 'created_at' in resp.get_data().decode()
-        assert '"next":null' in resp.get_data().decode()
-        assert '"prev":null' in resp.get_data().decode()
         assert '"foo":"badger"' in resp.get_data().decode()
         assert '"bar":"mushroom"' in resp.get_data().decode()
-
-    @mock.patch.object(db.Model, 'query')
-    def test_001a_happy_path_things_get_first_page(self, mock_db_query):
-        pass
+        # Links Object:
+        assert 'page=2' in data["links"]["next"]
+        self.assertEqual(data["links"]["prev"], None)
+        assert 'page=1' in data["links"]["first"]
+        assert 'page=3' in data["links"]["last"]
+        self.assertNotEqual(data["links"]["first"], data["links"]["last"])
+        # Counts Object:
+        self.assertEqual(data["counts"]["from"], 1)
+        self.assertEqual(data["counts"]["to"], 3)
+        self.assertEqual(data["counts"]["total"], 8)
+        self.assertLessEqual(data["counts"]["to"], data["counts"]["total"])
 
     @mock.patch.object(db.Model, 'query')
     def test_001b_happy_path_things_get_second_page(self, mock_db_query):
-        pass
-    
+        mock_db_query.order_by.return_value.paginate.return_value.items = multi_thing_list
+        mock_db_query.order_by.return_value.paginate.return_value.has_prev = True
+        mock_db_query.order_by.return_value.paginate.return_value.prev_num = 1
+        mock_db_query.order_by.return_value.paginate.return_value.has_next = True
+        mock_db_query.order_by.return_value.paginate.return_value.next_num = 3
+        mock_db_query.order_by.return_value.paginate.return_value.pages = 3
+        mock_db_query.order_by.return_value.paginate.return_value.total = 8
+        mock_db_query.order_by.return_value.paginate.return_value.per_page = 3
+        mock_db_query.order_by.return_value.paginate.return_value.page = 2
+        resp = self.app.get('/v1/things?per_page=3&page=2', headers={'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.get_data().decode())
+        # Thing Objects:
+        assert 'created_at' in resp.get_data().decode()
+        assert '"foo":"badger"' in resp.get_data().decode()
+        assert '"bar":"mushroom"' in resp.get_data().decode()
+        # Links Object:
+        assert 'page=3' in data["links"]["next"]
+        assert 'page=1' in data["links"]["prev"]
+        assert 'page=1' in data["links"]["first"]
+        assert 'page=3' in data["links"]["last"]
+        self.assertNotEqual(data["links"]["first"], data["links"]["last"])
+        # Counts Object:
+        self.assertEqual(data["counts"]["from"], 4)
+        self.assertEqual(data["counts"]["to"], 6)
+        self.assertEqual(data["counts"]["total"], 8)
+        self.assertLessEqual(data["counts"]["to"], data["counts"]["total"])
+
     @mock.patch.object(db.Model, 'query')
     def test_001c_happy_path_things_get_last_page(self, mock_db_query):
-        pass
+        mock_db_query.order_by.return_value.paginate.return_value.items = multi_thing_list
+        mock_db_query.order_by.return_value.paginate.return_value.has_prev = True
+        mock_db_query.order_by.return_value.paginate.return_value.prev_num = 2
+        mock_db_query.order_by.return_value.paginate.return_value.has_next = False
+        mock_db_query.order_by.return_value.paginate.return_value.next_num = None
+        mock_db_query.order_by.return_value.paginate.return_value.pages = 3
+        mock_db_query.order_by.return_value.paginate.return_value.total = 8
+        mock_db_query.order_by.return_value.paginate.return_value.per_page = 3
+        mock_db_query.order_by.return_value.paginate.return_value.page = 3
+        resp = self.app.get('/v1/things?per_page=3&page=3', headers={'accept': 'application/json'})
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.get_data().decode())
+        # Thing Objects:
+        assert 'created_at' in resp.get_data().decode()
+        assert '"foo":"badger"' in resp.get_data().decode()
+        assert '"bar":"mushroom"' in resp.get_data().decode()
+        # Links Object:
+        self.assertEqual(data["links"]["next"], None)
+        assert 'page=2' in data["links"]["prev"]
+        assert 'page=1' in data["links"]["first"]
+        assert 'page=3' in data["links"]["last"]
+        self.assertNotEqual(data["links"]["first"], data["links"]["last"])
+        # Counts Object:
+        self.assertEqual(data["counts"]["from"], 7)
+        self.assertEqual(data["counts"]["to"], 8)
+        self.assertEqual(data["counts"]["total"], 8)
+        self.assertLessEqual(data["counts"]["to"], data["counts"]["total"])
 
     @mock.patch.object(db.session, 'commit')
     @mock.patch.object(db.session, 'add')
