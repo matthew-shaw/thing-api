@@ -54,10 +54,15 @@ def get_things():
         "last": url_for(request.endpoint, _external=True, **last)
     }
 
+    if (results.page * results.per_page) > results.total:
+        to = results.total
+    else:
+        to = (results.page * results.per_page)
+
     counts = {
         "total": results.total,
         "from": (results.page * results.per_page) - results.per_page + 1,
-        "to": (results.page * results.per_page) - results.per_page + len(things)
+        "to": to
     }
 
     response = {
