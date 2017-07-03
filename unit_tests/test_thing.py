@@ -42,8 +42,8 @@ class TestThing(TestCase):
         assert '"foo":"badger"' in resp.get_data().decode()
         assert '"bar":"mushroom"' in resp.get_data().decode()
         # Links Object:
-        self.assertEqual(data["links"]["next"], None)
-        self.assertEqual(data["links"]["prev"], None)
+        self.assertIsNone(data["links"]["next"], None)
+        self.assertIsNone(data["links"]["prev"], None)
         assert 'page=1' in data["links"]["first"]
         assert 'page=1' in data["links"]["last"]
         self.assertEqual(data["links"]["first"], data["links"]["last"])
@@ -73,7 +73,7 @@ class TestThing(TestCase):
         assert '"bar":"mushroom"' in resp.get_data().decode()
         # Links Object:
         assert 'page=2' in data["links"]["next"]
-        self.assertEqual(data["links"]["prev"], None)
+        self.assertIsNone(data["links"]["prev"], None)
         assert 'page=1' in data["links"]["first"]
         assert 'page=3' in data["links"]["last"]
         self.assertNotEqual(data["links"]["first"], data["links"]["last"])
@@ -132,7 +132,7 @@ class TestThing(TestCase):
         assert '"foo":"badger"' in resp.get_data().decode()
         assert '"bar":"mushroom"' in resp.get_data().decode()
         # Links Object:
-        self.assertEqual(data["links"]["next"], None)
+        self.assertIsNone(data["links"]["next"], None)
         assert 'page=2' in data["links"]["prev"]
         assert 'page=1' in data["links"]["first"]
         assert 'page=3' in data["links"]["last"]
