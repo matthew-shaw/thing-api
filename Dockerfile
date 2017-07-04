@@ -19,13 +19,13 @@ ENV SQL_HOST=postgres \
 # Put your app-specific stuff here (extra yum installs etc).
 # Any unique environment variables your config.py needs should also be added as ENV entries here
 
-ENV APP_NAME "thing-api"
-ENV MAX_HEALTH_CASCADE 6
-ENV TIMEOUT "5"
+ENV APP_NAME="thing-api" \
+    MAX_HEALTH_CASCADE=6 \
+    TIMEOUT="5"
 
 # Dependencies
-ENV AUDIT_API_URL "http://audit-api:8080"
-ENV AUDIT_API_VERSION "v1"
+ENV AUDIT_API_URL="http://audit-api:8080" \
+    AUDIT_API_VERSION="v1"
 
 # ----
 
