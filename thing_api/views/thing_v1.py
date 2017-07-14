@@ -2,7 +2,6 @@ from flask import Blueprint, Response, request, url_for
 from thing_api.extensions import db
 from thing_api.models import Thing
 from thing_api.exceptions import ApplicationError
-from thing_api.dependencies.audit_api import AuditAPI
 from flask_negotiate import consumes, produces
 from datetime import datetime
 from jsonschema import validate, ValidationError, FormatChecker
@@ -71,8 +70,6 @@ def get_things():
         "things": things
     }
 
-    audit = AuditAPI()
-    audit.create("Retrieved Things")
     return Response(response=json.dumps(response, separators=(',', ':')),
                     mimetype='application/json',
                     status=200)
@@ -107,8 +104,6 @@ def create_thing():
     # For newly created resources, always set the Location header to the GET request route of the new resource.
     response.headers["Location"] = "{0}/{1}".format(request.url, thing.thing_id)
 
-    audit = AuditAPI()
-    audit.create("Created Thing: " + thing.thing_id)
     return response
 
 
@@ -120,8 +115,6 @@ def get_thing(thing_id):
     if not thing:
         raise ApplicationError('Thing not found', 'Exxx', 404)
 
-    audit = AuditAPI()
-    audit.create("Retrieved Thing: " + thing.thing_id)
     return Response(response=repr(thing),
                     mimetype='application/json',
                     status=200)
@@ -150,8 +143,6 @@ def update_thing(thing_id):
     db.session.add(thing)
     db.session.commit()
 
-    audit = AuditAPI()
-    audit.create("Updated Thing: " + thing.thing_id)
     return Response(response=repr(thing),
                     mimetype='application/json',
                     status=200)
@@ -168,8 +159,6 @@ def delete_thing(thing_id):
     db.session.delete(thing)
     db.session.commit()
 
-    audit = AuditAPI()
-    audit.create("Deleted Thing: " + thing.thing_id)
     return Response(response=None,
                     mimetype='application/json',
                     status=204)

@@ -39,10 +39,6 @@ MAX_HEALTH_CASCADE = os.environ['MAX_HEALTH_CASCADE']
 # Timeout
 TIMEOUT = int(os.environ['TIMEOUT'])
 
-# Dependencies
-AUDIT_API_URL = os.environ["AUDIT_API_URL"]
-AUDIT_API_VERSION = os.environ["AUDIT_API_VERSION"]
-
 LOGCONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
