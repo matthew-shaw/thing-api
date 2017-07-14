@@ -1,0 +1,5 @@
+{
+    "stack": "heroku-16",
+    "success_url": "/v1/things",
+    "website": "http://matthew-shaw.github.io/"
+}
